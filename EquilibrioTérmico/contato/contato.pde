@@ -1,24 +1,33 @@
 int t;
+float t1=255;
+float t2=0;
+float dt;
+float f;
 
 void setup() 
 {
    size(400,400);
    background(255,255,255);
    t=0;
+   dt=t1-t2;
 }
 
 void draw() 
 {
-    
+  
   noStroke();
-  fill(255-t,128,128);
+  fill(t1,128,128);
   rect(50,50,100,100);
-  fill(128,128,255-t);
+  fill(128,128,255-t2);
   rect(150,50,100,100);
   t++;
-  if (t>128) {
-    t=0;
+  dt = t1 -t2;
+  dt = dt*0.05;
+  t1 -= dt ;
+  t2 += dt;
+  println("t:" + t + " t0 "+ t1 + " t1 " + t2 + " dt " + dt);
+  if (dt < 1e-2 ) {
     noLoop();
-  }  
-  delay(30);  
+  }
+  delay(300);
 }
