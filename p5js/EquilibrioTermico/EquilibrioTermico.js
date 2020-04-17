@@ -41,26 +41,19 @@ let cinza = color ('silver');
    rect(150,150,300,300,15);
    textSize(50);
    fill(0,0,0);
-   text(nf(th,2,2),150,150);
+   text(nf(th,2,2)+" ℃",150,150);
    
    var corf = lerpColor(frio,cinza,1-(th-tc)/dt);
    fill(corf);
    rect(450,150,300,300,15);
    textSize(50);
    fill(0,0,0);
-   text(nf(tc,2,2),450,150);
+   text(nf(tc,2,2)+" ℃",450,150);
    xa = th;
    xb = tc;
    de = (th - tc)*f;
    th = th - de*c1;
    tc = tc + de*c2;
    t = t + 1;
-   fill(corq);
-   line(t-5,300+(100-xa),t,300+(100-th));
-   fill(corf);
-   line(t-5,300+(100-xb),t,300+(100-tc));
-   if (t>600) {
-     t=0;
-   }
-   frameRate(60);
+   frameRate(45);
 }
