@@ -10,14 +10,15 @@ let th = 100;
 let tc = 0;
 
 // veriação máxima
-let dt = th - tc
+let dt = th - tc;
 
 // Capacidades de cada corpo
-c1=1.0,c2=1.0;
+var c1=1.0;
+var c2=1.0;
 
 // Que fração deve ser transferida sem alterar 
 // muito a temperatura
-let f = 0.003;
+let f = 0.01;
 
 
 let de;
@@ -55,5 +56,5 @@ let cinza = color ('silver');
    th = th - de*c1;
    tc = tc + de*c2;
    t = t + 1;
-   frameRate(45);
+   frameRate(30);
 }
