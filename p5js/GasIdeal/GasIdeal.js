@@ -1,7 +1,7 @@
 var ss = 5,
-vmax = 5,
-NParticles = 40,
-bsize = 500,
+vmax = 2,
+NParticles = 80,
+bsize = 400,
 cor, 
 diam,
 mass;
@@ -49,44 +49,47 @@ class Particle {
   }
   
   collideParticle(i,j) {
+    
+      let un = [0,0] ;
       let P1 = particles[i];
       let P2 = particles[j];
-      let dis = dist(P1.x,P1.y,P2.x,P2.y);
- /*      if(dis <= this.r) {
+      let dis = dist(P1.x,P1.y,P2.x,P2.y); 
+      let m1 = P1.mass;
+      let m2 = P2.mass;
+      let M = m1 + m2; 
+      if(dis <= (P1.r+P2.r)/2) {
 
-        let dx = this.x - otherparticle.x;
-        let dy = this.y - otherparticle.y;
-        
-        let tangent = atan2(dy, dx);
-        
-        let angle = 0.5 * PI + tangent
-        this.x += sin(angle)
-        this.y -= cos(angle)
-        otherparticle.x -= sin(angle)
-        otherparticle.y += cos(angle)
-        
-        
-        let v1speed = sqrt(sq(this.xSpeed) + sq(this.ySpeed));
-        let v2speed = sqrt(sq(otherparticle.xSpeed) +         sq(otherparticle.ySpeed));
-        let v1angle = 2*tangent - this.ySpeed/this.xSpeed; 
-        let v2angle = 2*tangent - otherparticle.ySpeed/otherparticle.xSpeed;
-        let tmp = v1speed;
-        v1speed = v2speed;
-        v2speed = tmp;
-        this.xSpeed=v1speed * cos(v1angle);
-        this.ySpeed=v1speed * sin(v1angle);
-        otherparticle.xSpeed=v2speed * cos(v2angle);
-        otherparticle.ySpeed=v2speed * sin(v2angle);
-        
+        // vetor tangente  
+        let dx = P1.x - P2.x;
+        let dy = P1.y - P2.y;
+         
+        // vetores unitários   
+        let unn = sqrt (sq(dx)+sq(dy));
+        un[0] = dx/unn;
+        un[1] = dy/unn;
+        let ut = [-un[1],un[0]];
 
+        // projeções das velocidades 
+        let v1n = un[0]*P1.xSpeed + un[1]*P1.ySpeed;
+        let v1t = ut[0]*P1.xSpeed + ut[1]*P1.ySpeed;
+        let v2n = un[0]*P2.xSpeed + un[1]*P2.ySpeed;
+        let v2t = ut[0]*P2.xSpeed + ut[1]*P2.ySpeed;
+        // new normal velocities
+        // tangential velocities are kept
+        let v1nl = ( v1n*(m1 - m2) + 2*m2*v2n )/M;
+        let v2nl = ( v2n*(m2 - m1) + 2*m1*v1n )/M;
         
-        this.x += this.xSpeed;
-        this.y += this.ySpeed;
-        otherparticle.x += otherparticle.xSpeed;
-        otherparticle.y += otherparticle.ySpeed;
+        particles[i].xSpeed = v1nl*un[0] + v1t * ut[0];
+        particles[i].ySpeed = v1nl*un[1] + v1t * ut[1];
+        particles[j].xSpeed = v2nl*un[0] + v2t * ut[0];
+        particles[j].ySpeed = v2nl*un[1] + v2t * ut[1];
+
+        particles[i].x += particles[i].xSpeed ;
+        particles[i].y += particles[i].ySpeed ;
+        particles[j].x += particles[j].xSpeed ;
+        particles[j].y += particles[j].ySpeed ;
+    
       }
-      
-   */   
   } 
     
 }
@@ -108,7 +111,7 @@ function draw() {
   for (let i = 0; i<particles.length; i++) {
     cor = 'black';
     diam = 6;
-    mass = 1;
+    mass = 1.0;
     if (i<10) {
       cor = 'yellow';
       diam = 12;
