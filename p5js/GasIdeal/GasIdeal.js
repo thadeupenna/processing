@@ -1,25 +1,29 @@
-var ss = 0;
-var vmax = 2;
-var NParticles = 40;
-var bsize =600;
-var diameter = 10;
+var ss = 5,
+vmax = 5,
+NParticles = 40,
+bsize = 500,
+cor, 
+diam,
+mass;
 
 class Particle {
   constructor(){
     this.x = random(0,width);
     this.y = random(0,height);
-    this.r = diameter;
     this.xSpeed = random(-vmax,vmax);
     this.ySpeed = random(-vmax,vmax);
   }
 
 // cria a partícula.
-  createParticle() {
+  createParticle(cor, diameter, mass) {
+    this.r = diameter;
+    this.cor = cor;
+    this.mass = mass;
     noStroke();
-    fill('red');
+    fill(this.cor);
     circle(this.x,this.y,this.r);
-    stroke('black');
-    line(this.x,this.y,this.x+this.xSpeed*ss,this.y+this.ySpeed*ss);
+//    stroke('black');
+   // line(this.x,this.y,this.x+this.xSpeed*ss,this.y+this.ySpeed*ss);
   }
   
   moveParticle() {
@@ -44,9 +48,11 @@ class Particle {
     }  
   }
   
-  collideParticle(otherparticle) {
-      let dis = dist(this.x,this.y,otherparticle.x,otherparticle.y);
-      if(dis <= this.r) {
+  collideParticle(i,j) {
+      let P1 = particles[i];
+      let P2 = particles[j];
+      let dis = dist(P1.x,P1.y,P2.x,P2.y);
+ /*      if(dis <= this.r) {
 
         let dx = this.x - otherparticle.x;
         let dy = this.y - otherparticle.y;
@@ -78,7 +84,9 @@ class Particle {
         this.y += this.ySpeed;
         otherparticle.x += otherparticle.xSpeed;
         otherparticle.y += otherparticle.ySpeed;
-      } 
+      }
+      
+   */   
   } 
     
 }
@@ -98,10 +106,18 @@ function draw() {
   background( color('silver') );
   
   for (let i = 0; i<particles.length; i++) {
-    particles[i].createParticle();
+    cor = 'black';
+    diam = 6;
+    mass = 1;
+    if (i<10) {
+      cor = 'yellow';
+      diam = 12;
+    }  
+    particles[i].createParticle(cor,diam,mass);
     particles[i].moveParticle();
     for (let j = i+1; j < particles.length; j++) {
-      particles[i].collideParticle(particles[j]);
+      particles[i].collideParticle(i,j);
     } 
   }  
+  frameRate(60);
 }
