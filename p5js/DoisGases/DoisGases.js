@@ -1,17 +1,28 @@
 var ss = 5,
 vmax = 10,
-NParticles = 600,
-bsize = 800,
+NParticles = 100,
+bsize = 600,
 cor, 
 diam,
-mass;
+mass,
+caixa;
+
 
 class Particle {
   constructor(){
-    this.x = random(0,width);
-    this.y = random(0,height);
+    this.x = random(0,bsize);
+    this.y = random(0,bsize);
+    if (this.x > bsize/2) {
+      vmax = 10;
+      this.caixa = 1;
+    }
+    else {
+      vmax = 5;
+      this.caixa = 0;
+    }  
     this.xSpeed = random(-vmax,vmax);
     this.ySpeed = random(-vmax,vmax);
+
   }
 
 // cria a partícula.
@@ -19,6 +30,7 @@ class Particle {
     this.r = diameter;
     this.cor = cor;
     this.mass = mass;
+
     noStroke();
     fill(this.cor);
     circle(this.x,this.y,this.r);
@@ -29,12 +41,18 @@ class Particle {
   moveParticle() {
     this.x+=this.xSpeed;
     this.y+=this.ySpeed;
-    if(this.x < 0 ) {
-      this.x = 0; 
+    let xmin = 0;
+    let xmax = bsize/2;
+    if ( this.caixa == 1 ) {
+      xmin = bsize/2;
+      xmax = bsize;
+    }
+    if(this.x < xmin ) {
+      this.x = xmin; 
       this.xSpeed*=-1;
     }  
-    if ( this.x > width ) {
-      this.x = width; 
+    if ( this.x > xmax ) {
+      this.x = xmax; 
       this.xSpeed*=-1;
     }      
   
@@ -42,8 +60,8 @@ class Particle {
       this.y = 0;
       this.ySpeed*=-1;
     }  
-    if ( this.y > height ) {
-      this.y = height;
+    if ( this.y > bsize ) {
+      this.y = bsize;
       this.ySpeed*=-1;
     }  
   }
@@ -106,14 +124,20 @@ function setup() {
 
 
 function draw() {
-  background( color('silver') );
-  
+  background( 220 );
+  stroke('black');
+  line(bsize/2,0,bsize/2,bsize);
+  noStroke();
   diam = 4;
   mass = 1.0;
+  mvmax = sqrt(2)*vmax;
+  frio = color('cyan'); 
+  quente = color('red');
   for (let i = 0; i<particles.length; i++) {
+    diam = 8;
+    mass = 1.0;
     let v = sqrt(sq(particles[i].xSpeed)+sq(particles[i].ySpeed)); 
-    
-    cor = lerpColor('blue', 'yellow', v/vmax);
+    cor = lerpColor(frio,quente, v/mvmax);
     particles[i].createParticle(cor,diam,mass);
     particles[i].moveParticle();
     for (let j = 0; j < particles.length; j++) {
@@ -122,4 +146,5 @@ function draw() {
       }  
     } 
   }  
+  frameRate(30);
 }
