@@ -1,5 +1,5 @@
 var ss = 5,
-vmax = 2,
+vmax = 4,
 NParticles = 80,
 bsize = 400,
 cor, 
@@ -22,8 +22,8 @@ class Particle {
     noStroke();
     fill(this.cor);
     circle(this.x,this.y,this.r);
-//    stroke('black');
-   // line(this.x,this.y,this.x+this.xSpeed*ss,this.y+this.ySpeed*ss);
+    stroke('black');
+    line(this.x,this.y,this.x+this.xSpeed*ss,this.y+this.ySpeed*ss);
   }
   
   moveParticle() {
