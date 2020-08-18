@@ -13,11 +13,11 @@ class Particle {
     this.x = random(0,bsize);
     this.y = random(0,bsize);
     if (this.x > bsize/2) {
-      vmax = 10;
+      vmax = 20;
       this.caixa = 1;
     }
     else {
-      vmax = 5;
+      vmax = 3;
       this.caixa = 0;
     }  
     this.xSpeed = random(-vmax,vmax);
