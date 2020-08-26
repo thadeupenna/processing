@@ -1,5 +1,4 @@
-# Processing
-demos em processing
+# Termodinâmica
 
 ## [Equilibrio Térmico ](p5js/EquilibrioTermico/index.html)
 
