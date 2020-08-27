@@ -1,102 +1,153 @@
-let N = 20;
-let L = 250;
+let N;
+let L = 400;
+let width = 800;
+let height = 100;
 let p = [];
 let s = [];
-let Y = 100;
-let x0 = 75;
-let xe = L/N;
+let Y = height/2;
+let x0;
+let xe;
+let sl,sigma;
+let slN;
+let t,l,lsum,e0;
+let fixo;
+let potential;
 
 
 class Particle {
+
   constructor(i,d) {
     this.i = i;
-    this.x = i*L/N;
+    this.x = i*2*d;
     this.v = 0;
     this.d = d;
     this.m = sq(this.d);
+    this.fe = 0;
+    this.fd = 0;
   }
 
   show() {
+    let raio = this.d/2;
+    fill(150);
+    circle(this.x+x0, Y, sigma);
     fill(0);
     strokeWeight(1);
     stroke(0);
-    ellipse(this.x+x0, Y, this.d, this.d);
+    circle(this.x+x0, Y, raio);
   }
 
-  update() {
+  updatef() {
     let sl, sr;
+    potential = 'OH';
+    if (kind.value() == 'Lennard-Jones') potential = 'LJ';
     if (this.i > 0) {
-      sl = s[this.i-1].f;
+      this.fe = -p[this.i-1].fd;  
     }
     else {
-      sl = 0;
+      this.fe = 0;
     }
-    if (this.i == N) {
-      sr = 0;
+    if (this.i == N-1) {
+      this.fd = 0;
     } 
     else {
-      sr = s[this.i].f;
+      if (potential == 'LJ') {
+        this.fd = LJ(this.i, this.i+1);
+      }
+      else {
+        this.fd = OscHarm(this.i, this.i+1);
+      }  
     }
-    let f =  - sl + sr;
-    this.v += f;  
-    this.x += this.v;
+    let fr =  this.fd + this.fe;
+  }
+
+  updatex() {
+    if (this.i != fixo) {
+      this.v += this.fd + this.fe;
+      this.x += this.v;  
+    }
   }
 }
 
-class Spring {
-  constructor(i) {
-    this.i = i;
-    this.xi = xe*i;
-    this.xf = this.xi + xe;
-    this.f = 0;
-  }
 
-  show (){
-    stroke(0);
-    strokeWeight(4);
-    if (this.f > 0) {
-      strokeWeight(1);
-    }
-    else if (this.f < 0) {
-      stroke(255,0,0);
-      strokeWeight(8);
-    }
-    line(p[this.i].x+x0,Y,p[this.i+1].x+x0,Y);
-  }
+function LJ(i,j) {
+  let rij = p[j].x - p[i].x;
+  sigma = 2*p[j].d*pow(2,-1/6);
+  return -24*e0*pow(sigma/rij,6)*(2*pow(sigma/rij,6)-1.)/rij; 
+}
 
-  update() {
-    let l = p[this.i+1].x - p[this.i].x;
-    this.f = l - xe;
+function OscHarm(i,j) {
+  sigma = p[i].d/2
+  let rij =  p[j].x - p[i].x;
+  return (rij-2*p[i].d);
+}
+
+function initialCond() {
+  t = 0;
+  lsum = 0;
+  e0 = 0.70;
+  N = 31;
+  x0 = (width-N*20)/2;
+  E = sl.value();
+  fixo=floor(N/2); 
+
+  let v0 = 0;
+  for (let i=0; i<N; i++) {
+    p[i] = new Particle(i,10);
   }
+  // p[fixo-1].v = E/70;
+  // p[fixo+1].v = -p[fixo-1].v;
+  if (potential == 'LJ') {
+    p[0].v = E/80;
+    p[N-1].v = -p[0].v;
+  }  
+  else {
+    for (let i=1; i<N-1; i++) {
+      p[i].x *= 1+random(-1,1)*E/5000.0; 
+    }
+  }
+  loop();
 }
 
 function setup() {
-  createCanvas(400, 200);
-  for (let i=0; i<N; i++) {
-    p[i] = new Particle(i,16);
-    s[i] = new Spring(i);
-  }
-  p[N] = new Particle(N,16);
-  for (let i in p) {
-    p[i].x += randomGaussian()*20;
-    p[i].v = 0;
-  }
-  frameRate(10);
+  createCanvas(width,height);
+  createP('Velocidade');
+  sl = createSlider(0,100,0);
+  initialCond();
+  createP('');
+  sl.changed(initialCond);
+
+  kind = createRadio();
+  kind.option('Lennard-Jones');
+  kind.option('Oscilador Harmônico');
+  kind.selected('Lennard-Jones');
+  potential = 'LJ';
+
+  let btnStart = createButton("Início");
+  btnStart.mousePressed(initialCond);
+
+  let btnReset = createButton("Parar");
+  btnReset.mousePressed(noLoop);
+  frameRate(60);
 }
 
 function draw() {
   background(211);
   stroke(255,0,0);
-  line(x0,0,x0,200);
-  line(L+x0,0,L+x0,200);
-  for (let i in p) { 
-    p[i].update();
-    if (i<N) {
-      s[i].update();
-    }
+
+  for (let i in p) p[i].updatef();
+  for (let i in p) {
+    p[i].updatex();
+    p[i].show(); 
   }
-  for (let i in p) { 
-    if (i<N) s[i].show();
-    p[i].show();  
-  }  
+  lsum += p[N-1].x-p[0].x;
+  t++;
+  text('L='+nf(lsum/t,3,1),20,12);
+  text('t='+t,20,90);
+  text(kind.value(),20,30);
+  stroke(255,0,0,128);
+  line(x0+p[0].x,   0, x0+p[0].x  , 200);
+  line(x0+p[N-1].x, 0, x0+p[N-1].x, 200);
+  stroke(0,0,255,128);
+  line(x0,   0, x0  , 200);
+  line(x0+(N-1)*20, 0, x0+(N-1)*20, 200);
 }
