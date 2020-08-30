@@ -11,7 +11,8 @@ var c2=1.0;
 // Que fração deve ser transferida sem alterar 
 // muito a temperatura
 let f = 0.01;
-
+let width=150;
+let height=150;
 let de;
 let x=0,xa=0,xb=0;
 let slt1,slt2;
@@ -20,29 +21,32 @@ function initialCond() {
   th = slt1.value();
   tc = slt2.value();
   thermo(th,tc);
+  t=0;
   noLoop();
 }
 
 function thermo() {
   fill(151);
-  rect(150,150,300,300,15);
-  // fill(corf);
-  rect(450,150,300,300,15);
-  textSize(50);
+  rect(100,  100,width,height,15);
+  fill(180);
+  rect(100+width,100,width,height,15);
+  textSize(20);
   fill(0);
-  text(nf(round(th,2),2,2)+" ℃",150,150);
-  text(nf(round(tc,2),2,2)+" ℃",450,150);
-  textSize(25);
+  text(nf(round(th,2),2,2)+" ℃", width/2+30, 100);
+  text(nf(round(tc,2),2,2)+" ℃", width +100, 100);
+  textSize(12);
   c2 = sc2.value();
-  text('C1 = 1',200,40);
-  text('C2 = '+c2,500,40);
+  text('C1 = 1',60+width/2,40);
+  text('C2 = '+c2,60+width,40);
+  textSize(24);
+  text('t = '+t,80+width,160);
 }
 
 
 
 function setup() {
 
-  createCanvas(600, 400);
+  createCanvas(600, 200);
   rectMode(CENTER);
   textAlign(CENTER);
   createP('Temperatura T1');
