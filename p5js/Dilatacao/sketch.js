@@ -143,6 +143,8 @@ function draw() {
   }
   lsum += p[N-1].x-p[0].x;
   t++;
+  noStroke();
+  fill(0);
   text('L='+nf(lsum/t,3,1),20,12);
   text('t='+t,20,90);
   text(kind.value(),20,30);
