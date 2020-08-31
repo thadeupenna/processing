@@ -72,7 +72,7 @@ class Particle {
 function LJ(i,j) {
   let rij = p[j].x - p[i].x;
   sigma = 2*p[j].d*pow(2,-1/6);
-  return 24*e0*pow(sigma/rij,6)*(2*pow(sigma/rij,6)-1.)/rij; 
+  return 6*e0*pow(sigma/rij,6)*(2*pow(sigma/rij,6)-1.)/rij; 
 }
 
 function OscHarm(i,j) {
@@ -98,7 +98,7 @@ function initialCond() {
   // p[fixo+1].v = -p[fixo-1].v;
   for (let i=1; i<N-1; i++) {
     let ft =5000;
-    if (potential == 'LJ') ft =30000; 
+    if (potential == 'LJ') ft =26000; 
     p[i].x *= 1+random(-1,1)*E/ft; 
   }
   loop();
