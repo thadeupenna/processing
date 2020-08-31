@@ -12,13 +12,14 @@ let slN;
 let t,l,lsum,e0;
 let fixo;
 let potential;
-let dt = 5e-1;
+let dt = 5e-2;
+let r0 = 1.122462;
 
 class Particle {
 
   constructor(i,d) {
     this.i = i;
-    this.x = i*2*d;
+    this.x = i*r0;
     this.v = 0;
     this.d = d;
     this.m = sq(this.d);
@@ -27,13 +28,11 @@ class Particle {
   }
 
   show() {
-    let raio = this.d/2;
-    fill(150);
-    circle(this.x+x0, Y, 2*raio);
-    fill(0);
+    fill(128);
     strokeWeight(1);
     stroke(0);
-    circle(this.x+x0, Y, raio);
+    let xp = map(this.x,-1,32,100,700);
+    circle(xp, Y, 10);
   }
 
   updatef() {
@@ -61,32 +60,31 @@ class Particle {
   }
 
   updatex() {
-    if (this.i != 5*fixo) {
-      this.v += (this.fd + this.fe)*dt;
-      this.x += this.v*dt;  
-    }
+    this.v += (this.fd + this.fe)*dt;
+    this.x += this.v*dt;  
   }
 }
 
 
 function LJ(i,j) {
   let rij = p[j].x - p[i].x;
-  sigma = 2*p[j].d*pow(2,-1/6);
-  return 6*e0*pow(sigma/rij,6)*(2*pow(sigma/rij,6)-1.)/rij; 
+  sigma = 1;
+  return 24*e0*pow(sigma/rij,6)*(2*pow(sigma/rij,6)-1.)/rij; 
 }
 
 function OscHarm(i,j) {
-  sigma = p[i].d/2
   let rij =  p[j].x - p[i].x;
-  return (rij-2*p[i].d);
+  return 20*(rij-r0);
 }
 
 function initialCond() {
+  background(211);
+
   t = 0;
   lsum = 0;
   e0 = 0.7;
-  N = 31;
-  x0 = (width-N*20)/2;
+  N = 24;
+  x0 = 0;
   E = sl.value();
   fixo=floor(N/2); 
 
@@ -96,30 +94,38 @@ function initialCond() {
   }
   // p[fixo-1].v = E/70;
   // p[fixo+1].v = -p[fixo-1].v;
-  for (let i=1; i<N-1; i++) {
-    let ft =5000;
-    if (potential == 'LJ') ft =26000; 
-    p[i].x *= 1+random(-1,1)*E/ft; 
+  for (let i=0; i<N; i++) {
+    let ft = 5;
+    if (potential == 'LJ') ft = 15; 
+    let dx =  random(-1e-1,1e-1);
+    p[i].x += dx/ft*E;
+    p[i].show();
   }
+  noLoop();
+}
+
+function comeca () {
+  initialCond();
   loop();
 }
 
 function setup() {
   createCanvas(width,height);
   createP('Velocidade');
-  sl = createSlider(0,100,0);
+  sl = createSlider(0,10,0);
   initialCond();
   createP('');
-  sl.changed(initialCond);
+  sl.input(initialCond);
 
   kind = createRadio();
   kind.option('Lennard-Jones');
   kind.option('Oscilador Harmônico');
   kind.selected('Lennard-Jones');
+  kind.input(initialCond);
   potential = 'LJ';
-
+  noLoop();
   let btnStart = createButton("Início");
-  btnStart.mousePressed(initialCond);
+  btnStart.mousePressed(comeca);
 
   let btnReset = createButton("Parar");
   btnReset.mousePressed(noLoop);
@@ -130,8 +136,8 @@ function draw() {
   background(211);
   stroke(255,0,0);
 
-  for (let i in p) p[i].updatef();
   for (let i in p) {
+    p[i].updatef();
     p[i].updatex();
     p[i].show(); 
   }
@@ -140,10 +146,4 @@ function draw() {
   text('L='+nf(lsum/t,3,1),20,12);
   text('t='+t,20,90);
   text(kind.value(),20,30);
-  stroke(255,0,0,128);
-  line(x0+p[0].x,   0, x0+p[0].x  , 200);
-  line(x0+p[N-1].x, 0, x0+p[N-1].x, 200);
-  stroke(0,0,255,128);
-  line(x0,   0, x0  , 200);
-  line(x0+(N-1)*20, 0, x0+(N-1)*20, 200);
 }

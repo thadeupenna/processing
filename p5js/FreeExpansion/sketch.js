@@ -34,12 +34,12 @@ class Particle {
 
 function setup() {
   createCanvas(width, height);
-  for(let i=0; i<300; i++) {
+  for(let i=0; i<500; i++) {
     gas[i] = new Particle(200,100,80);
   }
   barrier = width/2;
   cor_barreira = color(255,0,0);
-  frameRate(10);
+  frameRate(40);
 }
 
 function mousePressed() {
