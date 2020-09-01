@@ -8,7 +8,7 @@ let v0 = 0;
 let sigma = 1;
 let e0 = 1;
 let rmin = 0.9,rmax = 2.5;
-let ymax= 0.05, ymin = -1;
+let ymax= 0.05, ymin = -1.1, Emin = -1;
 
 class Particle {
   constructor(x,d,m,E) {
@@ -16,7 +16,7 @@ class Particle {
     this.d = d;
     this.E = E;
     this.m = m;
-    this.v = sqrt(2*(this.E-ymin)/m); 
+    this.v = sqrt(2*(this.E-Emin)/m); 
   }
 
   update() {
@@ -44,7 +44,7 @@ function LJf(x) {
 
 function mudaEnergia() {
   p.E = map(Esl.value(),0,10,v0,-0.1);
-  p.v = sqrt(2*(p.E-ymin)/p.m);
+  p.v = sqrt(2*(p.E-Emin)/p.m);
   p.x = r0;
   p.update();
 }
