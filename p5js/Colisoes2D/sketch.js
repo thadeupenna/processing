@@ -37,7 +37,7 @@ function initCond() {
 }
 
 function setup() {
-  v0 = 8;
+  v0 = 6;
   let canvas = createCanvas(width, height);
   Nsl = createSlider(10,100,50).parent("sliderN");
   gsl = createSlider(0,10,0).parent("sliderg");

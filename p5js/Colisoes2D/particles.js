@@ -39,18 +39,21 @@ class ParticleinaBox {
   }
 
   collide(p2,width,height) {
-
-    if (p5.Vector.dist(this.r, p2.r) <= (this.d + p2.d)/2 ) {
-
+    let overlap = (this.d + p2.d)/2 - p5.Vector.dist(this.r, p2.r);
+    if (overlap >= 0)  {
       let dm = this.m - p2.m;
       let sm = this.m + p2.m;
       let vun = p5.Vector.sub(p2.r, this.r).normalize();
       let ut = createVector(-vun.y, vun.x);
-
       let v1n = p5.Vector.dot(vun, this.v);
       let v2n = p5.Vector.dot(vun, p2.v);
       let v1t = p5.Vector.dot(ut, this.v);
       let v2t = p5.Vector.dot(ut, p2.v);
+
+      this.r.add(p5.Vector.mult(vun, overlap)); 
+      p2.r.add(p5.Vector.mult(vun, -overlap)); 
+
+
       let c1 = ( v1n * dm + v2n *2* p2.m) / sm;
       let c2 = (-v2n * dm + v1n *2* this.m) / sm;
       let v1na = p5.Vector.mult(vun,c1);
@@ -60,6 +63,7 @@ class ParticleinaBox {
       this.v = p5.Vector.add(v1na, v1ta);
       p2.v = p5.Vector.add(v2na, v2ta);
       this.move();
+      p2.move();
     }
   }
 }
