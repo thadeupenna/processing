@@ -2,7 +2,7 @@
 
 ### [Equilibrio Térmico ](p5js/EquilibrioTermico/index.html)
 
-### [Gás Ideal 2D](p5js/Colisoes2D/index.html)
+### [Gás Ideal em uma Caixa](p5js/Colisoes2D/index.html)
 
 ### [Gás ideal Cores](p5js/GasIdeal/index.html)
 
