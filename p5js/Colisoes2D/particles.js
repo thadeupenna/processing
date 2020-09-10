@@ -18,23 +18,19 @@ class ParticleinaBox {
     stroke(255,0,0)
     if (this.r.y >= caixa.bw - this.d) {
       this.v.y *= -eps;
-      this.v.x *= eps;  
       this.r.y = caixa.bw - this.d - 1 ;
       line(caixa.lw,caixa.bw-4,caixa.rw,caixa.bw-4)
     } else  if  (this.r.y <= caixa.tw + this.d ) {
       this.v.y *= -eps;
-      this.v.x *= eps;  
       this.r.y = caixa.tw + this.d + 1;
       line(caixa.lw,caixa.tw+4,caixa.rw,caixa.tw+4)
     }  
     if (this.r.x >= caixa.rw - this.d) {
       this.v.x *= -eps;
-      this.v.y *= eps;  
       this.r.x = caixa.rw - this.d - 1;
       line(caixa.rw-4,caixa.tw,caixa.rw-4,caixa.bw)
     } else if (this.r.x <= caixa.lw + this.d) { 
       this.v.x *= -eps;
-      this.v.y *= eps;  
       this.r.x = caixa.lw + this.d + 1 ;
       line(caixa.lw+4,caixa.tw,caixa.lw+4,caixa.bw)
     } 
