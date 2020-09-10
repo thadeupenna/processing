@@ -1,9 +1,8 @@
 class ParticleinaBox {
-  constructor(r, d) {
+  constructor(r, v, d) {
     this.r = r;
-    this.v = createVector(5,5);
-    this.d = d+randomGaussian()*8;
-    if (this.d <=3) this.d=3;
+    this.v = v;
+    this.d = d;
     this.m = sq(this.d);
   }
 
@@ -14,21 +13,38 @@ class ParticleinaBox {
     ellipse(this.r.x, this.r.y, this.d, this.d);
   }
 
-  move(width,height) {
+  move() {
+    strokeWeight(6)
+    stroke(255,0,0)
+    if (this.r.y >= caixa.bw - this.d) {
+      this.v.y *= -eps;
+      this.v.x *= eps;  
+      this.r.y = caixa.bw - this.d - 1 ;
+      line(caixa.lw,caixa.bw-4,caixa.rw,caixa.bw-4)
+    } else  if  (this.r.y <= caixa.tw + this.d ) {
+      this.v.y *= -eps;
+      this.v.x *= eps;  
+      this.r.y = caixa.tw + this.d + 1;
+      line(caixa.lw,caixa.tw+4,caixa.rw,caixa.tw+4)
+    }  
+    if (this.r.x >= caixa.rw - this.d) {
+      this.v.x *= -eps;
+      this.v.y *= eps;  
+      this.r.x = caixa.rw - this.d - 1;
+      line(caixa.rw-4,caixa.tw,caixa.rw-4,caixa.bw)
+    } else if (this.r.x <= caixa.lw + this.d) { 
+      this.v.x *= -eps;
+      this.v.y *= eps;  
+      this.r.x = caixa.lw + this.d + 1 ;
+      line(caixa.lw+4,caixa.tw,caixa.lw+4,caixa.bw)
+    } 
+    this.v.y += g;
     this.r.add(this.v);
-    if ((this.r.x >= width - this.d/2) || (this.r.x <= this.d/2)) {
-      this.v.x *= -1;
-      this.r.add(this.v);
-    }
-    if ((this.r.y >= height - this.d/2) || (this.r.y <= this.d/2)) {
-      this.v.y *= -1;
-      this.r.add(this.v);
-    }
   }
 
   collide(p2,width,height) {
 
-    if (p5.Vector.dist(this.r, p2.r) < (this.d + p2.d) / 2) {
+    if (p5.Vector.dist(this.r, p2.r) <= (this.d + p2.d)/2 ) {
 
       let dm = this.m - p2.m;
       let sm = this.m + p2.m;
@@ -47,8 +63,17 @@ class ParticleinaBox {
       let v2ta = p5.Vector.mult(ut,v2t);
       this.v = p5.Vector.add(v1na, v1ta);
       p2.v = p5.Vector.add(v2na, v2ta);
-      this.move(width);
-      p2.move(height); 
-    }  
+      this.move();
+    }
+  }
+}
+
+
+class CubeBox {
+  constructor (lw,tw,rw,bw) {
+    this.lw = lw;
+    this.tw = tw;
+    this.rw = rw;
+    this.bw = bw;
   }
 }

@@ -1,15 +1,15 @@
 var ss = 5,
-vmax = 10,
-NParticles = 600,
-bsize = 800,
+vmax = 4,
+NParticles = 100,
+bsize = 600,
 cor, 
 diam,
 mass;
 
 class Particle {
   constructor(){
-    this.x = random(0,width);
-    this.y = random(0,height);
+    this.x = random(0,bsize);
+    this.y = random(0,bsize);
     this.xSpeed = random(-vmax,vmax);
     this.ySpeed = random(-vmax,vmax);
   }
@@ -22,8 +22,8 @@ class Particle {
     noStroke();
     fill(this.cor);
     circle(this.x,this.y,this.r);
-//    stroke('black');
-//    line(this.x,this.y,this.x+this.xSpeed*ss,this.y+this.ySpeed*ss);
+    stroke('black');
+    line(this.x,this.y,this.x+this.xSpeed*ss,this.y+this.ySpeed*ss);
   }
   
   moveParticle() {
@@ -33,8 +33,8 @@ class Particle {
       this.x = 0; 
       this.xSpeed*=-1;
     }  
-    if ( this.x > width ) {
-      this.x = width; 
+    if ( this.x > bsize ) {
+      this.x = bsize; 
       this.xSpeed*=-1;
     }      
   
@@ -42,8 +42,8 @@ class Particle {
       this.y = 0;
       this.ySpeed*=-1;
     }  
-    if ( this.y > height ) {
-      this.y = height;
+    if ( this.y > bsize ) {
+      this.y = bsize;
       this.ySpeed*=-1;
     }  
   }
@@ -106,14 +106,21 @@ function setup() {
 
 
 function draw() {
-  background( color('silver') );
+  background( 220 );
   
   diam = 4;
   mass = 1.0;
+  frio = color('cyan'); 
+  quente = color('red');
   for (let i = 0; i<particles.length; i++) {
+    diam = 4;
+    mass = 1.0;
     let v = sqrt(sq(particles[i].xSpeed)+sq(particles[i].ySpeed)); 
-    
-    cor = lerpColor('blue', 'yellow', v/vmax);
+    cor = lerpColor(frio,quente, v/vmax);
+    if ( i < 20 ) {
+      mass = 5.0;
+      diam = 16;
+    }  
     particles[i].createParticle(cor,diam,mass);
     particles[i].moveParticle();
     for (let j = 0; j < particles.length; j++) {
