@@ -58,7 +58,7 @@ function setup() {
   createCanvas(width, height);
   
   barrier = width/2;
-  cor_barreira = color(255,0,0);
+  cor_barreira = color(255,255,0);
   let btnClose = createButton("Fecha");
   btnClose.mousePressed(Fecha);
 
@@ -85,6 +85,7 @@ function draw() {
   background(51);
 
   stroke(cor_barreira);
+  strokeWeight(4)
   line(width/2,0,width/2,height);
   noStroke();
   fill(255,0,0,32);
